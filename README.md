@@ -1,5 +1,5 @@
 # Hoster
-Manual access provider. Claims for a request, accept it manually and notifies him automatically.
+Manual access provider. Claims for access, accept or decline it manually and notifies him automatically.
 
 A pet project by JAVO.
 
