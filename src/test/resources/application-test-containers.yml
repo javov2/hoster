@@ -1,0 +1,17 @@
+db: jdbc:tc:postgresql:14:///databasename
+
+logging:
+  level:
+    org:
+      flyway: debug
+
+spring:
+  datasource:
+    url: ${db}
+  jpa:
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: true
+    url: ${db}
+    baseline-on-migrate: true
