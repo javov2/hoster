@@ -1,4 +1,4 @@
-# Hoster
+# Hoster ![Tests status](.github/badges/test.svg)![Build status](.github/badges/build.svg)![Coverage](.github/badges/jacoco.svg)
 Manual access provider. Claims for access, accept or decline it manually and notifies him automatically.
 
 A pet project by JAVO.
