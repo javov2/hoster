@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" , "develop"]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master" , "develop"]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adopt'
+          distribution: 'adopt '
           cache: maven
       - name: Test with Maven
         id: test
