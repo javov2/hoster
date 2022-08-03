@@ -1,6 +1,8 @@
 package com.javo.hoster.repository;
 
-import com.javo.hoster.domain.entity.AccessRequestEntity;
+
+import com.javo.hoster.RepositoryJPARunner;
+import com.javo.hoster.repository.entity.AccessRequestEntity;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 @Testcontainers
 @ActiveProfiles("test-containers")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = RepositoryJPARunner.class)
 class AccessRequestRepositoryTest {
 
     @Autowired

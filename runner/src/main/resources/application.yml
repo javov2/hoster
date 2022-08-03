@@ -1,0 +1,17 @@
+db: jdbc:postgresql://localhost/hoster
+
+spring:
+  datasource:
+    username: javo
+    password: javo
+    url: ${db}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    url: ${db}
+    user: javo
+    password: javo

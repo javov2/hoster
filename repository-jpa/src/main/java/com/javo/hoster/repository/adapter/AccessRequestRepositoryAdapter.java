@@ -1,16 +1,19 @@
 package com.javo.hoster.repository.adapter;
 
-import com.javo.hoster.domain.model.AccessRequest;
-import com.javo.hoster.domain.entity.AccessRequestEntity;
-import com.javo.hoster.domain.repository.AccessRequestRepository;
+
 import com.javo.hoster.repository.AccessRequestJPARepository;
+import com.javo.hoster.repository.entity.AccessRequestEntity;
+import hoster.model.AccessRequest;
+import hoster.repository.AccessRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+@Repository
 public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
 
     @Autowired
