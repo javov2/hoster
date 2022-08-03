@@ -46,6 +46,7 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-branches-badge: true
+          on-missing-report: badges
           jacoco-csv-file: >
             repository-jpa/target/site/jacoco/jacoco.csv
             business/target/site/jacoco/jacoco.csv
