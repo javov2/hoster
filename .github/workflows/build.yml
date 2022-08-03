@@ -46,6 +46,10 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-branches-badge: true
+          jacoco-csv-file: >
+            repository-jpa/target/site/jacoco/jacoco.csv
+            business/target/site/jacoco/jacoco.csv
+            runner/target/site/jacoco/jacoco.csv
       - name: Commit the coverage badge
         run: |
           if [[ `git status --porcelain` ]]; then
