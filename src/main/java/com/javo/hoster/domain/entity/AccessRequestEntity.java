@@ -1,4 +1,4 @@
-package com.javo.hoster.entity;
+package com.javo.hoster.domain.entity;
 
 import lombok.*;
 

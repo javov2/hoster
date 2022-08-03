@@ -1,13 +1,12 @@
-package com.javo.hoster.adapter;
+package com.javo.hoster.repository.adapter;
 
-import com.javo.hoster.entity.AccessRequestEntity;
-import com.javo.hoster.model.AccessRequest;
-import com.javo.hoster.repository.AccessRequestRepository;
+import com.javo.hoster.domain.entity.AccessRequestEntity;
+import com.javo.hoster.domain.model.AccessRequest;
+import com.javo.hoster.repository.AccessRequestJPARepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.test.StepVerifier;
 
@@ -15,14 +14,13 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccessRequestRepositoryAdapterTest {
 
     @Mock
-    AccessRequestRepository accessRequestRepository;
+    AccessRequestJPARepository accessRequestJPARepository;
 
     @InjectMocks
     AccessRequestRepositoryAdapter accessRequestRepositoryAdapter;
@@ -46,14 +44,14 @@ class AccessRequestRepositoryAdapterTest {
         entityToSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
         entityToSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
-        when(accessRequestRepository.save(entityToSave)).thenReturn(entityToSave);
+        when(accessRequestJPARepository.save(entityToSave)).thenReturn(entityToSave);
 
         var result = accessRequestRepositoryAdapter.save(model)
                 .as(StepVerifier::create)
                 .expectNext(model)
                 .verifyComplete();
 
-        verify(accessRequestRepository, times(1)).save(entityToSave);
+        verify(accessRequestJPARepository, times(1)).save(entityToSave);
     }
 
     @Test
@@ -73,14 +71,14 @@ class AccessRequestRepositoryAdapterTest {
         entityFound.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
         var requestEntityList = List.of(entityFound);
-        when(accessRequestRepository.findAll()).thenReturn(requestEntityList);
+        when(accessRequestJPARepository.findAll()).thenReturn(requestEntityList);
 
         var result = accessRequestRepositoryAdapter.findAll()
                 .as(StepVerifier::create)
                 .expectNext(model)
                 .verifyComplete();
 
-        verify(accessRequestRepository, times(1)).findAll();
+        verify(accessRequestJPARepository, times(1)).findAll();
 
     }
 }

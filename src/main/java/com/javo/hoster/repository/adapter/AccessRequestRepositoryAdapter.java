@@ -1,22 +1,20 @@
-package com.javo.hoster.adapter;
+package com.javo.hoster.repository.adapter;
 
-import com.javo.hoster.entity.AccessRequestEntity;
-import com.javo.hoster.model.AccessRequest;
-import com.javo.hoster.repository.AccessRequestRepository;
+import com.javo.hoster.domain.model.AccessRequest;
+import com.javo.hoster.domain.entity.AccessRequestEntity;
+import com.javo.hoster.domain.repository.AccessRequestRepository;
+import com.javo.hoster.repository.AccessRequestJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-@Component
-public class AccessRequestRepositoryAdapter {
+public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
 
     @Autowired
-    private AccessRequestRepository repository;
+    private AccessRequestJPARepository repository;
 
     public Mono<AccessRequest> save(AccessRequest accessRequest){
         return Mono.just(repository.save(toEntity(accessRequest)))
