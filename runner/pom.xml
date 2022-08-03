@@ -25,8 +25,8 @@
         </dependency>
         <dependency>
             <groupId>com.javo</groupId>
-            <artifactId>repository-jpa</artifactId>
-            <version>${project.version}</version>
+            <artifactId>jpa-postgres</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -38,7 +38,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            <groupId>org.projectlombok</groupId>
+                            <groupId>org.project-lombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>

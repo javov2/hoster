@@ -25,9 +25,9 @@
 
 	<packaging>pom</packaging>
 	<modules>
-		<module>repository-jpa</module>
 		<module>core</module>
 		<module>runner</module>
+		<module>infrastructure</module>
 	</modules>
 
 	<dependencies>

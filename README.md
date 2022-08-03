@@ -3,10 +3,6 @@ Manual access provider. Claims for access, accept or decline it manually and not
 
 A pet project by JAVO.
 
-```shell
-docker run -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
-```
-
 # Tech Stack
 <img src="https://github.com/devicons/devicon/blob/master/icons/java/java-original-wordmark.svg" title="Java" alt="Java" width="40" height="40"/>&nbsp;
 <img src="https://github.com/devicons/devicon/blob/master/icons/spring/spring-original-wordmark.svg" title="Spring" alt="Spring" width="40" height="40"/>&nbsp;
@@ -19,3 +15,24 @@ docker run -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster
 - Spring Reactive Web (Project Reactor)
 - Spring JPA
 - PostgresSQL
+- Maven Multi-module (Clean Architecture approach)
+
+### Test Locally
+
+First, we need a PostgresSQL instance.
+
+```shell
+docker run -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
+```
+
+Compile and package the project:
+
+```shell
+mvn -pl runner -am clean install
+```
+
+Run the application:
+
+```shell
+java -jar .\runner\target\runner-0.0.1-SNAPSHOT.jar
+```
