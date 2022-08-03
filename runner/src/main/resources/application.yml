@@ -15,3 +15,5 @@ spring:
     url: ${db}
     user: javo
     password: javo
+    locations:
+      - filesystem:src/main/resources/db.migration

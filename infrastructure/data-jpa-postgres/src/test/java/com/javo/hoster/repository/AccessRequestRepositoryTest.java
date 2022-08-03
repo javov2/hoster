@@ -16,6 +16,7 @@ import reactor.test.StepVerifier;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Testcontainers
@@ -63,6 +64,23 @@ class AccessRequestRepositoryTest {
         Flux.just(accessRequestJPARepository.findAll())
                 .as(StepVerifier::create)
                 .expectNext(List.of(toSave))
+                .verifyComplete();
+    }
+
+    @Test
+    @Order(2)
+    void findAccessRequestById(){
+
+        var toSave = new AccessRequestEntity();
+        toSave.setId(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd"));
+        toSave.setName("");
+        toSave.setCompany("");
+        toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
+        toSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+
+        Mono.just(accessRequestJPARepository.findById(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd")))
+                .as(StepVerifier::create)
+                .expectNext(Optional.of(toSave))
                 .verifyComplete();
     }
 

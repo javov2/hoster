@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController("/access-request")
+import java.util.UUID;
+
+@RestController
 public class AccessRequestController {
 
     @Autowired
@@ -18,14 +20,14 @@ public class AccessRequestController {
     @Autowired
     private FindAccessRequestByIdUseCase findAccessRequestByIdUseCase;
 
-    @GetMapping()
+    @GetMapping("/access-request")
     public Flux<AccessRequest> getAllAccessRequest(){
         return findAllAccessRequestUseCase.process();
     }
 
-    @GetMapping(path = "?id")
-    public Mono<AccessRequest> getAllAccessRequest(@RequestParam String id){
-        return findAccessRequestByIdUseCase.process();
+    @GetMapping(value = "/access-request", params = {"id"})
+    public Mono<AccessRequest> getAccessRequestById(@RequestParam(name = "id") String id){
+        return findAccessRequestByIdUseCase.process(UUID.fromString(id));
     }
 
 }

@@ -2,15 +2,16 @@ package com.javo.hoster.repository.adapter;
 
 
 import com.javo.hoster.repository.AccessRequestJPARepository;
+import com.javo.hoster.repository.AccessRequestRepository;
 import com.javo.hoster.repository.entity.AccessRequestEntity;
 import com.javo.hoster.model.AccessRequest;
-import com.javo.hoster.repository.AccessRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -24,9 +25,26 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
                 .map(this::toModel);
     }
 
+    @Override
+    public Mono<AccessRequest> findById(UUID id) {
+        return Mono.just(repository.findById(id))
+                .map(this::toModel);
+    }
+
     public Flux<AccessRequest> findAll(){
         return Flux.fromIterable(repository.findAll())
                 .map(this::toModel);
+    }
+
+    private AccessRequest toModel(Optional<AccessRequestEntity> entityOptional){
+        var entity = entityOptional.orElseThrow();
+        return AccessRequest.builder()
+                .id(entity.getId())
+                .requestedAt(entity.getRequestedAt().truncatedTo(ChronoUnit.SECONDS))
+                .accessGrantedUntil(entity.getAccessGrantedUntil().truncatedTo(ChronoUnit.SECONDS))
+                .company(entity.getCompany())
+                .name(entity.getName())
+                .build();
     }
 
     private AccessRequest toModel(AccessRequestEntity entity){
