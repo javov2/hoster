@@ -10,4 +10,8 @@ A pet project by JAVO.
 <img src="https://github.com/devicons/devicon/blob/master/icons/kubernetes/kubernetes-plain-wordmark.svg" title="Kubernetes" alt="Kubernetes" width="40" height="40"/>&nbsp;
 <img src="https://github.com/devicons/devicon/blob/master/icons/azure/azure-original.svg" title="Azure" alt="Azure" width="40" height="40"/>&nbsp;
 
-
+- Java 11
+- Spring Boot 2.7
+- Spring Reactive Web (Project Reactor)
+- Spring JPA
+- PostgresSQL
