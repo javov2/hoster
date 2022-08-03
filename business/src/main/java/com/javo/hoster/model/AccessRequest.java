@@ -1,4 +1,4 @@
-package hoster.model;
+package com.javo.hoster.model;
 
 import lombok.Builder;
 import lombok.Data;

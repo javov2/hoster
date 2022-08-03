@@ -3,8 +3,8 @@ package com.javo.hoster.repository.adapter;
 
 import com.javo.hoster.repository.AccessRequestJPARepository;
 import com.javo.hoster.repository.entity.AccessRequestEntity;
-import hoster.model.AccessRequest;
-import hoster.repository.AccessRequestRepository;
+import com.javo.hoster.model.AccessRequest;
+import com.javo.hoster.repository.AccessRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

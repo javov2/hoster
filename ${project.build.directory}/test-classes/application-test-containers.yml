@@ -1,0 +1,25 @@
+db: jdbc:tc:postgresql:14:///databasename
+
+testcontainers:
+  reuse:
+    enable: true
+
+logging:
+  level:
+    org:
+      flyway: debug
+
+spring:
+  datasource:
+    url: ${db}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql=true:
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: true
+    url: ${db}
+    baseline-on-migrate: true

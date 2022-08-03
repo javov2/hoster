@@ -1,6 +1,6 @@
-package hoster.repository;
+package com.javo.hoster.repository;
 
-import hoster.model.AccessRequest;
+import com.javo.hoster.model.AccessRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

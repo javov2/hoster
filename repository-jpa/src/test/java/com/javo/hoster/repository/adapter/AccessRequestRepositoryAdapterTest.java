@@ -2,9 +2,8 @@ package com.javo.hoster.repository.adapter;
 
 
 import com.javo.hoster.repository.AccessRequestJPARepository;
-import com.javo.hoster.repository.adapter.AccessRequestRepositoryAdapter;
 import com.javo.hoster.repository.entity.AccessRequestEntity;
-import hoster.model.AccessRequest;
+import com.javo.hoster.model.AccessRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
