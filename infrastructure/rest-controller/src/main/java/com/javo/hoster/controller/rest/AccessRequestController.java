@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
+@RestController("/access-request")
 public class AccessRequestController {
 
     @Autowired
@@ -18,12 +18,12 @@ public class AccessRequestController {
     @Autowired
     private FindAccessRequestByIdUseCase findAccessRequestByIdUseCase;
 
-    @GetMapping(path = "/access-request")
+    @GetMapping()
     public Flux<AccessRequest> getAllAccessRequest(){
         return findAllAccessRequestUseCase.process();
     }
 
-    @GetMapping(path = "/access-request?id")
+    @GetMapping(path = "?id")
     public Mono<AccessRequest> getAllAccessRequest(@RequestParam String id){
         return findAccessRequestByIdUseCase.process();
     }

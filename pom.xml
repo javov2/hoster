@@ -28,6 +28,7 @@
 		<module>core</module>
 		<module>runner</module>
 		<module>infrastructure</module>
+		<module>domain</module>
 	</modules>
 
 	<dependencies>
