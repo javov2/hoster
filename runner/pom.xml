@@ -20,7 +20,7 @@
         <!-- Project modules -->
         <dependency>
             <groupId>com.javo</groupId>
-            <artifactId>business</artifactId>
+            <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
