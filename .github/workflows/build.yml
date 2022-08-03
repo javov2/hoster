@@ -48,8 +48,8 @@ jobs:
           generate-branches-badge: true
           on-missing-report: badges
           jacoco-csv-file: >
-            repository-jpa/target/site/jacoco/jacoco.csv
-            business/target/site/jacoco/jacoco.csv
+            infrastructure/jpa-postgres/target/site/jacoco/jacoco.csv
+            core/target/site/jacoco/jacoco.csv
             runner/target/site/jacoco/jacoco.csv
       - name: Commit the coverage badge
         run: |
