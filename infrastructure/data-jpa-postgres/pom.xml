@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jpa-postgres</artifactId>
-    <name>jpa-postgres</name>
+    <artifactId>data-jpa-postgres</artifactId>
+    <name>data-jpa-postgres</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -18,11 +18,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.javo</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

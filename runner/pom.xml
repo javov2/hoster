@@ -25,7 +25,12 @@
         </dependency>
         <dependency>
             <groupId>com.javo</groupId>
-            <artifactId>jpa-postgres</artifactId>
+            <artifactId>data-jpa-postgres</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javo</groupId>
+            <artifactId>rest-controller</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

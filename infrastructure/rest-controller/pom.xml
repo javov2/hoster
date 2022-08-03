@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jpa-mysql</artifactId>
+    <artifactId>rest-controller</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
