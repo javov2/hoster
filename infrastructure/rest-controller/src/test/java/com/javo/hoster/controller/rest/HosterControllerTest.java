@@ -53,7 +53,7 @@ class HosterControllerTest {
     private RespondAccessRequestUseCase respondAccessRequestUseCase;
 
     @Test
-    void claimAccess() throws JSONException {
+    void claimAccessWhenAccessRequestDTOIsValidAndAnAccessRequestConfirmationDTOIsReturned() throws JSONException {
 
         AccessRequest accessRequest = AccessRequest.builder()
                 .name("")
@@ -85,6 +85,51 @@ class HosterControllerTest {
                 .expectBody().json(accessRequestConfirmationAsJson.toString());
 
         verify(claimForAccessRequestUseCase, times(1)).process(accessRequest);
+
+    }
+
+    @Test
+    void claimAccessWhenAccessRequestDTOIsAnInvalidJsonStatus400IsExpected() throws JSONException {
+
+        AccessRequest accessRequest = AccessRequest.builder()
+                .name("")
+                .company("")
+                .accessTime(ACCESS_TIME)
+                .build();
+
+        JSONObject accessRequestAsJson = new JSONObject();
+        accessRequestAsJson.put("name", "");
+        accessRequestAsJson.put("company", "");
+        //accessRequestAsJson.put("accessTime", ACCESS_TIME);
+
+        AccessRequestConfirmation accessRequestConfirmation = AccessRequestConfirmation.builder()
+                .id(UUID.fromString(UUID_EXAMPLE))
+                .build();
+
+        JSONObject accessRequestConfirmationAsJson = new JSONObject();
+        accessRequestConfirmationAsJson.put("id", UUID_EXAMPLE);
+        accessRequestConfirmationAsJson.put("receivedAt", JSONObject.NULL);
+
+        webTestClient.post()
+                .uri(CLAIM_ACCESS_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .syncBody(accessRequestAsJson.toString())
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(claimForAccessRequestUseCase, times(0)).process(accessRequest);
+
+    }
+
+    @Test
+    void claimAccessWithGETInsteadOfPOSTStatus404Expected() throws JSONException {
+
+        webTestClient.get()
+                .uri(CLAIM_ACCESS_PATH)
+                .exchange()
+                .expectStatus().is4xxClientError();
+
+        verify(claimForAccessRequestUseCase, times(0)).process(any());
 
     }
 
