@@ -42,8 +42,8 @@ public class HosterController {
 
     @ResponseBody
     @PostMapping(value = "/respond-access")
-    public Mono<Access> respondAccess(@RequestBody AccessRequest accessRequest){
-        return respondAccessRequestUseCase.process(accessRequest);
+    public Mono<Access> respondAccess(@RequestParam(name = "id") String id, @RequestParam(name = "isGranted") boolean isGranted){
+        return respondAccessRequestUseCase.process(UUID.fromString(id), isGranted);
     }
 
 }
