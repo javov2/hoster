@@ -41,7 +41,7 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
         return AccessRequest.builder()
                 .id(entity.getId())
                 .requestedAt(entity.getRequestedAt().truncatedTo(ChronoUnit.SECONDS))
-                .accessGrantedUntil(entity.getAccessGrantedUntil().truncatedTo(ChronoUnit.SECONDS))
+                .accessTime(entity.getAccessTime())
                 .company(entity.getCompany())
                 .name(entity.getName())
                 .build();
@@ -51,7 +51,7 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
         return AccessRequest.builder()
                 .id(entity.getId())
                 .requestedAt(entity.getRequestedAt().truncatedTo(ChronoUnit.SECONDS))
-                .accessGrantedUntil(entity.getAccessGrantedUntil().truncatedTo(ChronoUnit.SECONDS))
+                .accessTime(entity.getAccessTime())
                 .company(entity.getCompany())
                 .name(entity.getName())
                 .build();
@@ -63,7 +63,7 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
         entity.setRequestedAt(model.getRequestedAt().truncatedTo(ChronoUnit.SECONDS));
         entity.setCompany(model.getCompany());
         entity.setName(model.getName());
-        entity.setAccessGrantedUntil(model.getAccessGrantedUntil().truncatedTo(ChronoUnit.SECONDS));
+        entity.setAccessTime(model.getAccessTime());
         return entity;
     }
 

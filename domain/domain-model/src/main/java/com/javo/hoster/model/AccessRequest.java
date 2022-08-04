@@ -14,6 +14,6 @@ public class AccessRequest {
     String name;
     String company;
     LocalDateTime requestedAt;
-    LocalDateTime accessGrantedUntil;
+    Long accessTime;
 
 }

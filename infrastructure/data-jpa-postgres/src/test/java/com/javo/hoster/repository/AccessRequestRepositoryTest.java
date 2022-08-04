@@ -28,7 +28,7 @@ class AccessRequestRepositoryTest {
     private AccessRequestJPARepository accessRequestJPARepository;
 
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
-    private final String GRANTED_UNTIL = "2022-08-03T19:45:40.026626500";
+    private final Long ACCESS_TIME = 10L;
 
     @Test
     @Order(1)
@@ -42,7 +42,7 @@ class AccessRequestRepositoryTest {
         toSave.setName("");
         toSave.setCompany("");
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
-        toSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+        toSave.setAccessTime(ACCESS_TIME);
 
         Mono.justOrEmpty(accessRequestJPARepository.save(toSave))
                 .as(StepVerifier::create)
@@ -59,7 +59,7 @@ class AccessRequestRepositoryTest {
         toSave.setName("");
         toSave.setCompany("");
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
-        toSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+        toSave.setAccessTime(ACCESS_TIME);
 
         Flux.just(accessRequestJPARepository.findAll())
                 .as(StepVerifier::create)
@@ -76,7 +76,7 @@ class AccessRequestRepositoryTest {
         toSave.setName("");
         toSave.setCompany("");
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
-        toSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+        toSave.setAccessTime(ACCESS_TIME);
 
         Mono.just(accessRequestJPARepository.findById(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd")))
                 .as(StepVerifier::create)

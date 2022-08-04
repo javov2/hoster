@@ -31,20 +31,20 @@ public class AccessRequestEntity {
     @NotNull
     LocalDateTime requestedAt;
     @NotNull
-    @Column(name = "granted_until")
-    LocalDateTime accessGrantedUntil;
+    @Column(name = "access_time")
+    Long accessTime;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccessRequestEntity that = (AccessRequestEntity) o;
-        return name.equals(that.name) && company.equals(that.company) && requestedAt.equals(that.requestedAt) && accessGrantedUntil.equals(that.accessGrantedUntil);
+        return name.equals(that.name) && company.equals(that.company) && requestedAt.equals(that.requestedAt) && accessTime.equals(that.accessTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, company, requestedAt, accessGrantedUntil);
+        return Objects.hash(name, company, requestedAt, accessTime);
     }
 }
 

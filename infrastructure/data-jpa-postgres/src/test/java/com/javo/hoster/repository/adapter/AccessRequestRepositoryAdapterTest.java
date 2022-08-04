@@ -27,7 +27,7 @@ class AccessRequestRepositoryAdapterTest {
     AccessRequestRepositoryAdapter accessRequestRepositoryAdapter;
 
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
-    private final String GRANTED_UNTIL = "2022-08-03T19:45:40.026626500";
+    private final Long ACCESS_TIME = 10L;
 
     @Test
     void saveWhenRepositoryWorksWell() {
@@ -35,14 +35,14 @@ class AccessRequestRepositoryAdapterTest {
         var model = AccessRequest.builder()
                 .name("")
                 .company("")
-                .accessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS))
+                .accessTime(ACCESS_TIME)
                 .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
                 .build();
 
         var entityToSave = new AccessRequestEntity();
         entityToSave.setName("");
         entityToSave.setCompany("");
-        entityToSave.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+        entityToSave.setAccessTime(ACCESS_TIME);
         entityToSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
         when(accessRequestJPARepository.save(entityToSave)).thenReturn(entityToSave);
@@ -61,14 +61,14 @@ class AccessRequestRepositoryAdapterTest {
         var model = AccessRequest.builder()
                 .name("")
                 .company("")
-                .accessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS))
+                .accessTime(ACCESS_TIME)
                 .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
                 .build();
 
         var entityFound = new AccessRequestEntity();
         entityFound.setName("");
         entityFound.setCompany("");
-        entityFound.setAccessGrantedUntil(LocalDateTime.parse(GRANTED_UNTIL).truncatedTo(ChronoUnit.SECONDS));
+        entityFound.setAccessTime(ACCESS_TIME);
         entityFound.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
         var requestEntityList = List.of(entityFound);
