@@ -2,11 +2,9 @@ package com.javo.hoster.controller.rest;
 
 import com.javo.hoster.controller.dto.AccessRequestConfirmationDTO;
 import com.javo.hoster.controller.dto.AccessRequestDTO;
-import com.javo.hoster.controller.rest.adapter.AccessRequestConfirmationRestAdapter;
-import com.javo.hoster.controller.rest.adapter.AccessRequestRestAdapter;
+import com.javo.hoster.controller.rest.adapter.HosterControllerDTOFactory;
 import com.javo.hoster.model.Access;
 import com.javo.hoster.model.AccessRequest;
-import com.javo.hoster.model.AccessRequestConfirmation;
 import com.javo.hoster.usecase.CheckAccessRequestUseCase;
 import com.javo.hoster.usecase.ClaimForAccessRequestUseCase;
 import com.javo.hoster.usecase.RespondAccessRequestUseCase;
@@ -37,9 +35,9 @@ public class HosterController {
     @ResponseBody
     @PostMapping(value = "/claim-access", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Mono<AccessRequestConfirmationDTO> claimAccess(@RequestBody AccessRequestDTO accessRequestDTO){
-        var accessRequest = AccessRequestRestAdapter.toModel(accessRequestDTO);
+        var accessRequest = HosterControllerDTOFactory.accessRequestDtoToModel(accessRequestDTO);
         return claimForAccessRequestUseCase.process(accessRequest)
-                .map(AccessRequestConfirmationRestAdapter::toDTO);
+                .map(HosterControllerDTOFactory::accessRequestConfirmationToDto);
     }
 
     @ResponseBody
