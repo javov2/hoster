@@ -1,5 +1,9 @@
 package com.javo.hoster.controller.rest;
 
+import com.javo.hoster.controller.dto.AccessRequestConfirmationDTO;
+import com.javo.hoster.controller.dto.AccessRequestDTO;
+import com.javo.hoster.controller.rest.adapter.AccessRequestConfirmationRestAdapter;
+import com.javo.hoster.controller.rest.adapter.AccessRequestRestAdapter;
 import com.javo.hoster.model.Access;
 import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.model.AccessRequestConfirmation;
@@ -7,11 +11,9 @@ import com.javo.hoster.usecase.CheckAccessRequestUseCase;
 import com.javo.hoster.usecase.ClaimForAccessRequestUseCase;
 import com.javo.hoster.usecase.RespondAccessRequestUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -33,14 +35,16 @@ public class HosterController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/claim-access")
-    public Mono<AccessRequestConfirmation> checkAccess(AccessRequest accessRequest){
-        return claimForAccessRequestUseCase.process(accessRequest);
+    @PostMapping(value = "/claim-access", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Mono<AccessRequestConfirmationDTO> claimAccess(@RequestBody AccessRequestDTO accessRequestDTO){
+        var accessRequest = AccessRequestRestAdapter.toModel(accessRequestDTO);
+        return claimForAccessRequestUseCase.process(accessRequest)
+                .map(AccessRequestConfirmationRestAdapter::toDTO);
     }
 
     @ResponseBody
     @PostMapping(value = "/respond-access")
-    public Mono<Access> respondAccess(AccessRequest accessRequest){
+    public Mono<Access> respondAccess(@RequestBody AccessRequest accessRequest){
         return respondAccessRequestUseCase.process(accessRequest);
     }
 

@@ -2,6 +2,7 @@ package com.javo.hoster.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,9 +12,9 @@ import java.util.UUID;
 public class AccessRequest {
 
     private UUID id;
-    String name;
-    String company;
-    LocalDateTime requestedAt;
-    Long accessTime;
+    private String name;
+    private String company;
+    private LocalDateTime requestedAt;
+    private Long accessTime;
 
 }
