@@ -12,6 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,6 +27,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,9 +40,10 @@ class HosterControllerTest {
     public static final String CLAIM_ACCESS_PATH = "/claim-access";
     public static final String RESPOND_ACCESS_PATH = "/respond-access";
 
-    public final String REQUESTED_AT = "2022-08-02T19:45:40";
-    private final Long ACCESS_TIME = 10L;
-    private final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
+    public static final String REQUESTED_AT = "2022-08-02T19:45:40";
+    public static final Long ACCESS_TIME = 10L;
+    public static final String VALID_EMAIL = "test@test.test";
+    public static final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
 
     @Autowired
     WebTestClient webTestClient;
@@ -64,6 +69,7 @@ class HosterControllerTest {
         JSONObject accessRequestAsJson = new JSONObject();
         accessRequestAsJson.put("name", "");
         accessRequestAsJson.put("company", "");
+        accessRequestAsJson.put("email", VALID_EMAIL);
         accessRequestAsJson.put("accessTime", ACCESS_TIME);
 
         AccessRequestConfirmation accessRequestConfirmation = AccessRequestConfirmation.builder()
@@ -88,19 +94,15 @@ class HosterControllerTest {
 
     }
 
-    @Test
-    void claimAccessWhenAccessRequestDTOIsAnInvalidJsonStatus400IsExpected() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("invalidJSONRequest")
+    void claimAccessWhenAccessRequestDTOIsAnInvalidJsonStatus400IsExpected(String bodyRequestJson) throws JSONException {
 
         AccessRequest accessRequest = AccessRequest.builder()
                 .name("")
                 .company("")
                 .accessTime(ACCESS_TIME)
                 .build();
-
-        JSONObject accessRequestAsJson = new JSONObject();
-        accessRequestAsJson.put("name", "");
-        accessRequestAsJson.put("company", "");
-        //accessRequestAsJson.put("accessTime", ACCESS_TIME);
 
         AccessRequestConfirmation accessRequestConfirmation = AccessRequestConfirmation.builder()
                 .id(UUID.fromString(UUID_EXAMPLE))
@@ -113,12 +115,29 @@ class HosterControllerTest {
         webTestClient.post()
                 .uri(CLAIM_ACCESS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .syncBody(accessRequestAsJson.toString())
+                .syncBody(bodyRequestJson)
                 .exchange()
                 .expectStatus().isBadRequest();
 
         verify(claimForAccessRequestUseCase, times(0)).process(accessRequest);
 
+    }
+
+    private static Stream<String> invalidJSONRequest() throws JSONException {
+        JSONObject incompleteJson = new JSONObject();
+        incompleteJson.put("name", "");
+        incompleteJson.put("company", "");
+
+        JSONObject invalidEmailJson = new JSONObject();
+        invalidEmailJson.put("name", "");
+        invalidEmailJson.put("company", "");
+        invalidEmailJson.put("accessTime", ACCESS_TIME);
+        invalidEmailJson.put("email", "test@");
+
+        return Stream.of(
+                incompleteJson.toString(),
+                invalidEmailJson.toString()
+        );
     }
 
     @Test
@@ -134,10 +153,12 @@ class HosterControllerTest {
     }
 
     @Test
-    void checkAccess() {
+    void respondAccess() {
     }
 
     @Test
-    void respondAccess() {
+    void checkAccess() {
     }
+
+
 }

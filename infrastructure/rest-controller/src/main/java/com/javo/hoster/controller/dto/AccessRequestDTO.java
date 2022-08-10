@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -17,6 +18,9 @@ public class AccessRequestDTO {
     private String name;
     @NotNull
     private String company;
+    @NotNull
+    @Email
+    private String email;
     @NotNull
     private Long accessTime;
 
