@@ -1,19 +1,16 @@
 package com.javo.hoster.controller.rest;
 
-import com.javo.hoster.controller.dto.AccessRequestDTO;
+import com.javo.hoster.model.Access;
 import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.model.AccessRequestConfirmation;
 import com.javo.hoster.usecase.CheckAccessRequestUseCase;
 import com.javo.hoster.usecase.ClaimForAccessRequestUseCase;
 import com.javo.hoster.usecase.RespondAccessRequestUseCase;
-import com.javo.hoster.usecase.crud.FindAccessRequestByIdUseCase;
-import com.javo.hoster.usecase.crud.FindAllAccessRequestUseCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -21,15 +18,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserter;
-import org.springframework.web.reactive.function.BodyInserters;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -96,7 +91,7 @@ class HosterControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("invalidJSONRequest")
+    @MethodSource("invalidClamAccessJSONRequest")
     void claimAccessWhenAccessRequestDTOIsAnInvalidJsonStatus400IsExpected(String bodyRequestJson) throws JSONException {
 
         AccessRequest accessRequest = AccessRequest.builder()
@@ -124,7 +119,7 @@ class HosterControllerTest {
 
     }
 
-    private static Stream<String> invalidJSONRequest() throws JSONException {
+    private static Stream<String> invalidClamAccessJSONRequest() throws JSONException {
         JSONObject incompleteJson = new JSONObject();
         incompleteJson.put("name", "");
         incompleteJson.put("company", "");
@@ -154,7 +149,82 @@ class HosterControllerTest {
     }
 
     @Test
-    void respondAccess() {
+    void respondAccessWhenRequestURLAndParamsAreOkStatus200AndAccessDTOExpected() throws JSONException {
+
+        String RequestURI = RESPOND_ACCESS_PATH+"?id="+UUID_EXAMPLE+"&isGranted="+ Boolean.TRUE;
+        UUID id = UUID.fromString(UUID_EXAMPLE);
+        LocalDateTime reviewedAt = LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS);
+
+        var access = Access.builder()
+                .isGranted(Boolean.TRUE)
+                .id(id)
+                .reviewedAt(reviewedAt)
+                .build();
+
+        JSONObject accessDTOAsJson = new JSONObject();
+        accessDTOAsJson.put("id", id);
+        accessDTOAsJson.put("reviewedAt", reviewedAt);
+        accessDTOAsJson.put("granted", Boolean.TRUE);
+
+        when(respondAccessRequestUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.just(access));
+
+        webTestClient.post()
+                .uri(RequestURI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().json(accessDTOAsJson.toString());
+
+        verify(respondAccessRequestUseCase, times(1)).process(id, Boolean.TRUE);
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidRespondAccessURIs")
+    void respondAccessWhenRequestURLIsOkButParamsAreNotValidExpectedStatus400BadRequest(String RequestURI) {
+
+        UUID id = UUID.fromString(UUID_EXAMPLE);
+
+        webTestClient.post()
+                .uri(RequestURI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest();;
+
+        verify(respondAccessRequestUseCase, times(0)).process(any(), eq(Boolean.TRUE));
+
+    }
+
+    private static Stream<String> invalidRespondAccessURIs() {
+        return Stream.of(
+                RESPOND_ACCESS_PATH+"?id="+UUID_EXAMPLE+"&isGranted="+ 5,
+                RESPOND_ACCESS_PATH+"?id="+123+"&isGranted="+ Boolean.TRUE
+        );
+    }
+
+    @Test
+    void respondAccessWhenRequestURLAndParamsAreOkUseCaseThrowsAnExceptionStatus500Expected() {
+
+        String RequestURI = RESPOND_ACCESS_PATH+"?id="+UUID_EXAMPLE+"&isGranted="+ Boolean.TRUE;
+        UUID id = UUID.fromString(UUID_EXAMPLE);
+        LocalDateTime reviewedAt = LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS);
+
+        var access = Access.builder()
+                .isGranted(Boolean.TRUE)
+                .id(id)
+                .reviewedAt(reviewedAt)
+                .build();
+
+        when(respondAccessRequestUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.error(RuntimeException::new));
+
+        webTestClient.post()
+                .uri(RequestURI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().is5xxServerError();
+
+        verify(respondAccessRequestUseCase, times(1)).process(id, Boolean.TRUE);
+
     }
 
     @Test

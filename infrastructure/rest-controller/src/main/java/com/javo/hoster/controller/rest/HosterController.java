@@ -37,15 +37,15 @@ public class HosterController {
 
     @ResponseBody
     @PostMapping(value = "/respond-access")
-    public Mono<AccessDTO> respondAccess(@RequestParam(name = "id") String id, @RequestParam(name = "isGranted") boolean isGranted){
-        return respondAccessRequestUseCase.process(UUID.fromString(id), isGranted)
+    public Mono<AccessDTO> respondAccess(@RequestParam(name = "id") UUID id, @RequestParam(name = "isGranted") boolean isGranted){
+        return respondAccessRequestUseCase.process(id, isGranted)
                 .map(HosterControllerDTOFactory::accessToDto);
     }
 
     @ResponseBody
     @GetMapping(value = "/check-access", params = {"id"})
-    public Mono<AccessDTO> checkAccess(@RequestParam(name = "id") String id){
-        return checkAccessRequestUseCase.process(UUID.fromString(id))
+    public Mono<AccessDTO> checkAccess(@RequestParam(name = "id") UUID id){
+        return checkAccessRequestUseCase.process(id)
                 .map(HosterControllerDTOFactory::accessToDto);
     }
 
