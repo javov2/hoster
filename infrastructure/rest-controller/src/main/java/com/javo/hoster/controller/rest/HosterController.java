@@ -1,5 +1,6 @@
 package com.javo.hoster.controller.rest;
 
+import com.javo.hoster.controller.dto.AccessDTO;
 import com.javo.hoster.controller.dto.AccessRequestConfirmationDTO;
 import com.javo.hoster.controller.dto.AccessRequestDTO;
 import com.javo.hoster.controller.rest.adapter.HosterControllerDTOFactory;
@@ -36,14 +37,16 @@ public class HosterController {
 
     @ResponseBody
     @PostMapping(value = "/respond-access")
-    public Mono<Access> respondAccess(@RequestParam(name = "id") String id, @RequestParam(name = "isGranted") boolean isGranted){
-        return respondAccessRequestUseCase.process(UUID.fromString(id), isGranted);
+    public Mono<AccessDTO> respondAccess(@RequestParam(name = "id") String id, @RequestParam(name = "isGranted") boolean isGranted){
+        return respondAccessRequestUseCase.process(UUID.fromString(id), isGranted)
+                .map(HosterControllerDTOFactory::accessToDto);
     }
 
     @ResponseBody
     @GetMapping(value = "/check-access", params = {"id"})
-    public Mono<Access> checkAccess(@RequestParam(name = "id") String id){
-        return checkAccessRequestUseCase.process(UUID.fromString(id));
+    public Mono<AccessDTO> checkAccess(@RequestParam(name = "id") String id){
+        return checkAccessRequestUseCase.process(UUID.fromString(id))
+                .map(HosterControllerDTOFactory::accessToDto);
     }
 
 }
