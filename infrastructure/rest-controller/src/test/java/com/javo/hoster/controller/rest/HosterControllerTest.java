@@ -228,8 +228,72 @@ class HosterControllerTest {
     }
 
     @Test
-    void checkAccess() {
+    void checkAccessWhenAccessWasReviewedAndAcceptedExpectStatus200AndAccessDTOBodyResponse() throws JSONException {
+
+        String RequestURI = CHECK_ACCESS_PATH+"?id="+UUID_EXAMPLE;
+        UUID id = UUID.fromString(UUID_EXAMPLE);
+        LocalDateTime reviewedAt = LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS);
+
+        var access = Access.builder()
+                .isGranted(Boolean.TRUE)
+                .id(id)
+                .reviewedAt(reviewedAt)
+                .build();
+
+        JSONObject accessDTOAsJson = new JSONObject();
+        accessDTOAsJson.put("id", id);
+        accessDTOAsJson.put("reviewedAt", reviewedAt);
+        accessDTOAsJson.put("granted", Boolean.TRUE);
+
+        when(checkAccessRequestUseCase.process(id)).thenReturn(Mono.just(access));
+
+        webTestClient.get()
+                .uri(RequestURI)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().json(accessDTOAsJson.toString());
+
+        verify(checkAccessRequestUseCase, times(1)).process(id);
+
     }
 
+    @Test
+    void checkAccessWhenAccessWasNotReviewedAccessDoesNotExistExpectStatus200EmptyBody() {
+
+        String RequestURI = CHECK_ACCESS_PATH+"?id="+UUID_EXAMPLE;
+        UUID id = UUID.fromString(UUID_EXAMPLE);
+        LocalDateTime reviewedAt = LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS);
+
+        var access = Access.builder()
+                .isGranted(Boolean.TRUE)
+                .id(id)
+                .reviewedAt(reviewedAt)
+                .build();
+
+        when(checkAccessRequestUseCase.process(id)).thenReturn(Mono.empty());
+
+        webTestClient.get()
+                .uri(RequestURI)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
+
+        verify(checkAccessRequestUseCase, times(1)).process(id);
+
+    }
+
+    @Test
+    void checkAccessUUIDRequestParamIsNotValidExpectStatus400BadRequest() {
+
+        var requestURI = CHECK_ACCESS_PATH+"?id="+123;
+
+        webTestClient.get()
+                .uri(requestURI)
+                .exchange()
+                .expectStatus().isBadRequest();;
+
+        verify(checkAccessRequestUseCase, times(0)).process(any());
+
+    }
 
 }
