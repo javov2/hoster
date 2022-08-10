@@ -18,6 +18,7 @@ public class HosterControllerDTOFactory {
 
     public static AccessRequest accessRequestDtoToModel(AccessRequestDTO accessRequestDTO){
         return AccessRequest.builder()
+                .email(accessRequestDTO.getEmail())
                 .accessTime(accessRequestDTO.getAccessTime())
                 .company(accessRequestDTO.getCompany())
                 .name(accessRequestDTO.getName())

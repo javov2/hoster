@@ -64,6 +64,7 @@ class HosterControllerTest {
                 .name("")
                 .company("")
                 .accessTime(ACCESS_TIME)
+                .email(VALID_EMAIL)
                 .build();
 
         JSONObject accessRequestAsJson = new JSONObject();
