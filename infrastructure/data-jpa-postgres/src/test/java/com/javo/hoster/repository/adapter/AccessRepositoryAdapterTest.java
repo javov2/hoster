@@ -2,10 +2,8 @@ package com.javo.hoster.repository.adapter;
 
 
 import com.javo.hoster.model.Access;
-import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.repository.AccessJPARepository;
 import com.javo.hoster.repository.entity.AccessEntity;
-import com.javo.hoster.repository.entity.AccessRequestEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +13,6 @@ import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +25,6 @@ class AccessRepositoryAdapterTest {
 
     public static final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
-    private final Long ACCESS_TIME = 10L;
 
     @Mock
     AccessJPARepository accessJPARepository;
