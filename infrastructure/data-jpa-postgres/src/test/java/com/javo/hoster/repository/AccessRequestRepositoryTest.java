@@ -29,6 +29,7 @@ class AccessRequestRepositoryTest {
 
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
     private final Long ACCESS_TIME = 10L;
+    private final String EMAIL = "test@test.com";
 
     @Test
     @Order(1)
@@ -41,6 +42,7 @@ class AccessRequestRepositoryTest {
         toSave.setId(UUID.fromString(uuid));
         toSave.setName("");
         toSave.setCompany("");
+        toSave.setEmail(EMAIL);
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
         toSave.setAccessTime(ACCESS_TIME);
 
@@ -58,6 +60,7 @@ class AccessRequestRepositoryTest {
         toSave.setId(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd"));
         toSave.setName("");
         toSave.setCompany("");
+        toSave.setEmail(EMAIL);
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
         toSave.setAccessTime(ACCESS_TIME);
 
@@ -75,6 +78,7 @@ class AccessRequestRepositoryTest {
         toSave.setId(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd"));
         toSave.setName("");
         toSave.setCompany("");
+        toSave.setEmail(EMAIL);
         toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
         toSave.setAccessTime(ACCESS_TIME);
 

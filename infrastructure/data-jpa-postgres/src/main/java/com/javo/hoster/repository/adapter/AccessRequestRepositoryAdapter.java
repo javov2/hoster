@@ -1,16 +1,15 @@
 package com.javo.hoster.repository.adapter;
 
 
+import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.repository.AccessRequestJPARepository;
 import com.javo.hoster.repository.AccessRequestRepository;
 import com.javo.hoster.repository.entity.AccessRequestEntity;
-import com.javo.hoster.model.AccessRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,18 +43,20 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
     private AccessRequest toModel(AccessRequestEntity entity){
         return AccessRequest.builder()
                 .id(entity.getId())
-                .requestedAt(entity.getRequestedAt().truncatedTo(ChronoUnit.SECONDS))
+                .requestedAt(entity.getRequestedAt())
                 .accessTime(entity.getAccessTime())
                 .company(entity.getCompany())
+                .email(entity.getEmail())
                 .name(entity.getName())
                 .build();
     }
 
     private AccessRequestEntity toEntity(AccessRequest model){
         var entity = new AccessRequestEntity();
-        entity.setId(UUID.randomUUID());
-        entity.setRequestedAt(model.getRequestedAt().truncatedTo(ChronoUnit.SECONDS));
+        entity.setId(model.getId());
+        entity.setRequestedAt(model.getRequestedAt());
         entity.setCompany(model.getCompany());
+        entity.setEmail(model.getEmail());
         entity.setName(model.getName());
         entity.setAccessTime(model.getAccessTime());
         return entity;

@@ -27,6 +27,7 @@ class AccessRequestRepositoryAdapterTest {
     public static final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
     private final Long ACCESS_TIME = 10L;
+    private final String EMAIL = "test@test.com";
 
     @Mock
     AccessRequestJPARepository accessRequestJPARepository;
@@ -41,6 +42,7 @@ class AccessRequestRepositoryAdapterTest {
         var model = AccessRequest.builder()
                 .name("")
                 .company("")
+                .email(EMAIL)
                 .accessTime(ACCESS_TIME)
                 .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
                 .build();
@@ -48,6 +50,7 @@ class AccessRequestRepositoryAdapterTest {
         var entityToSave = new AccessRequestEntity();
         entityToSave.setName("");
         entityToSave.setCompany("");
+        entityToSave.setEmail(EMAIL);
         entityToSave.setAccessTime(ACCESS_TIME);
         entityToSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
@@ -70,6 +73,7 @@ class AccessRequestRepositoryAdapterTest {
                 .id(id)
                 .name("")
                 .company("")
+                .email(EMAIL)
                 .accessTime(ACCESS_TIME)
                 .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
                 .build();
@@ -78,6 +82,7 @@ class AccessRequestRepositoryAdapterTest {
         entity.setId(id);
         entity.setName("");
         entity.setCompany("");
+        entity.setEmail(EMAIL);
         entity.setAccessTime(ACCESS_TIME);
         entity.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
@@ -114,6 +119,7 @@ class AccessRequestRepositoryAdapterTest {
         var model = AccessRequest.builder()
                 .name("")
                 .company("")
+                .email(EMAIL)
                 .accessTime(ACCESS_TIME)
                 .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
                 .build();
@@ -121,6 +127,7 @@ class AccessRequestRepositoryAdapterTest {
         var entityFound = new AccessRequestEntity();
         entityFound.setName("");
         entityFound.setCompany("");
+        entityFound.setEmail(EMAIL);
         entityFound.setAccessTime(ACCESS_TIME);
         entityFound.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
