@@ -1,20 +1,32 @@
 package com.javo.hoster.usecase;
 
-import com.javo.hoster.model.Access;
-import com.javo.hoster.repository.AccessRepository;
+import com.javo.hoster.model.AccessRequest;
+import com.javo.hoster.model.AccessRequestConfirmation;
+import com.javo.hoster.repository.AccessRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-public class CheckAccessUseCaseImpl implements CheckAccessUseCase {
+@Component
+public class ClaimForAccessUseCaseImpl implements ClaimForAccessUseCase {
 
     @Autowired
-    private AccessRepository accessRepository;
+    private AccessRequestRepository accessRequestRepository;
 
     @Override
-    public Mono<Access> process(UUID accessRequestId) {
-        return accessRepository.findById(accessRequestId);
+    public Mono<AccessRequestConfirmation> process(AccessRequest accessRequest) {
+        return accessRequestRepository.save(
+                        accessRequest.toBuilder()
+                                .requestedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                                .id(UUID.randomUUID())
+                                .build())
+                .map(accessRequest1 -> AccessRequestConfirmation.builder()
+                        .id(accessRequest1.getId())
+                        .receivedAt(accessRequest1.getRequestedAt())
+                        .build());
     }
-
 }
