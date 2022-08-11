@@ -38,13 +38,7 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
 
     private AccessRequest toModel(Optional<AccessRequestEntity> entityOptional){
         var entity = entityOptional.orElseThrow();
-        return AccessRequest.builder()
-                .id(entity.getId())
-                .requestedAt(entity.getRequestedAt().truncatedTo(ChronoUnit.SECONDS))
-                .accessTime(entity.getAccessTime())
-                .company(entity.getCompany())
-                .name(entity.getName())
-                .build();
+        return toModel(entity);
     }
 
     private AccessRequest toModel(AccessRequestEntity entity){

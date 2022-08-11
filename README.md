@@ -36,3 +36,10 @@ Run the application:
 ```shell
 java -jar .\runner\target\runner-0.0.1-SNAPSHOT.jar
 ```
+
+---
+# What's next
+
+- Learn ProjectReactor - SpringWebFlux
+- Learn Testcontainers
+- Learn Clean Architecture
