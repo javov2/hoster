@@ -16,4 +16,4 @@ spring:
     user: javo
     password: javo
     locations:
-      - filesystem:src/main/resources/db.migration
+      - classpath:/db/migration
