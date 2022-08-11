@@ -22,7 +22,7 @@ A pet project by JAVO.
 First, we need a PostgresSQL instance.
 
 ```shell
-docker run -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
+docker run -d --name hoster-db-postgres -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
 ```
 
 Compile and package the project:
