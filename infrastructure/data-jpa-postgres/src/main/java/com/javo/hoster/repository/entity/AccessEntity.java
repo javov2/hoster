@@ -2,7 +2,6 @@ package com.javo.hoster.repository.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,34 +15,29 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "access_request")
-public class AccessRequestEntity {
+@Table(name = "access")
+public class AccessEntity {
 
     @Id
     @EqualsAndHashCode.Exclude
     UUID id;
 
     @NotNull
-    String name;
+    Boolean isGranted;
     @NotNull
-    String company;
-    @NotNull
-    LocalDateTime requestedAt;
-    @NotNull
-    @Column(name = "access_time")
-    Long accessTime;
+    LocalDateTime reviewedAt;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AccessRequestEntity that = (AccessRequestEntity) o;
-        return name.equals(that.name) && company.equals(that.company) && requestedAt.equals(that.requestedAt) && accessTime.equals(that.accessTime);
+        AccessEntity that = (AccessEntity) o;
+        return isGranted.equals(that.isGranted) && reviewedAt.equals(that.reviewedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, company, requestedAt, accessTime);
+        return Objects.hash(isGranted, reviewedAt);
     }
 }
 
