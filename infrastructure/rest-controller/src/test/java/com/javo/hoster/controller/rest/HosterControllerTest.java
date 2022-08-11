@@ -3,9 +3,9 @@ package com.javo.hoster.controller.rest;
 import com.javo.hoster.model.Access;
 import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.model.AccessRequestConfirmation;
-import com.javo.hoster.usecase.CheckAccessRequestUseCase;
-import com.javo.hoster.usecase.ClaimForAccessRequestUseCase;
-import com.javo.hoster.usecase.RespondAccessRequestUseCase;
+import com.javo.hoster.usecase.CheckAccessUseCase;
+import com.javo.hoster.usecase.ClaimForAccessUseCase;
+import com.javo.hoster.usecase.RespondAccessUseCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -44,13 +44,13 @@ class HosterControllerTest {
     WebTestClient webTestClient;
 
     @MockBean
-    private CheckAccessRequestUseCase checkAccessRequestUseCase;
+    private CheckAccessUseCase checkAccessUseCase;
 
     @MockBean
-    private ClaimForAccessRequestUseCase claimForAccessRequestUseCase;
+    private ClaimForAccessUseCase claimForAccessUseCase;
 
     @MockBean
-    private RespondAccessRequestUseCase respondAccessRequestUseCase;
+    private RespondAccessUseCase respondAccessUseCase;
 
     @Test
     void claimAccessWhenAccessRequestDTOIsValidAndAnAccessRequestConfirmationDTOIsReturned() throws JSONException {
@@ -76,7 +76,7 @@ class HosterControllerTest {
         accessRequestConfirmationAsJson.put("id", UUID_EXAMPLE);
         accessRequestConfirmationAsJson.put("receivedAt", JSONObject.NULL);
 
-        when(claimForAccessRequestUseCase.process(accessRequest)).thenReturn(Mono.just(accessRequestConfirmation));
+        when(claimForAccessUseCase.process(accessRequest)).thenReturn(Mono.just(accessRequestConfirmation));
 
         webTestClient.post()
                 .uri(CLAIM_ACCESS_PATH)
@@ -86,7 +86,7 @@ class HosterControllerTest {
                 .expectStatus().isOk()
                 .expectBody().json(accessRequestConfirmationAsJson.toString());
 
-        verify(claimForAccessRequestUseCase, times(1)).process(accessRequest);
+        verify(claimForAccessUseCase, times(1)).process(accessRequest);
 
     }
 
@@ -115,7 +115,7 @@ class HosterControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
 
-        verify(claimForAccessRequestUseCase, times(0)).process(accessRequest);
+        verify(claimForAccessUseCase, times(0)).process(accessRequest);
 
     }
 
@@ -144,7 +144,7 @@ class HosterControllerTest {
                 .exchange()
                 .expectStatus().is4xxClientError();
 
-        verify(claimForAccessRequestUseCase, times(0)).process(any());
+        verify(claimForAccessUseCase, times(0)).process(any());
 
     }
 
@@ -166,7 +166,7 @@ class HosterControllerTest {
         accessDTOAsJson.put("reviewedAt", reviewedAt);
         accessDTOAsJson.put("granted", Boolean.TRUE);
 
-        when(respondAccessRequestUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.just(access));
+        when(respondAccessUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.just(access));
 
         webTestClient.post()
                 .uri(RequestURI)
@@ -175,7 +175,7 @@ class HosterControllerTest {
                 .expectStatus().isOk()
                 .expectBody().json(accessDTOAsJson.toString());
 
-        verify(respondAccessRequestUseCase, times(1)).process(id, Boolean.TRUE);
+        verify(respondAccessUseCase, times(1)).process(id, Boolean.TRUE);
 
     }
 
@@ -191,7 +191,7 @@ class HosterControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();;
 
-        verify(respondAccessRequestUseCase, times(0)).process(any(), eq(Boolean.TRUE));
+        verify(respondAccessUseCase, times(0)).process(any(), eq(Boolean.TRUE));
 
     }
 
@@ -215,7 +215,7 @@ class HosterControllerTest {
                 .reviewedAt(reviewedAt)
                 .build();
 
-        when(respondAccessRequestUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.error(RuntimeException::new));
+        when(respondAccessUseCase.process(id, Boolean.TRUE)).thenReturn(Mono.error(RuntimeException::new));
 
         webTestClient.post()
                 .uri(RequestURI)
@@ -223,7 +223,7 @@ class HosterControllerTest {
                 .exchange()
                 .expectStatus().is5xxServerError();
 
-        verify(respondAccessRequestUseCase, times(1)).process(id, Boolean.TRUE);
+        verify(respondAccessUseCase, times(1)).process(id, Boolean.TRUE);
 
     }
 
@@ -245,7 +245,7 @@ class HosterControllerTest {
         accessDTOAsJson.put("reviewedAt", reviewedAt);
         accessDTOAsJson.put("granted", Boolean.TRUE);
 
-        when(checkAccessRequestUseCase.process(id)).thenReturn(Mono.just(access));
+        when(checkAccessUseCase.process(id)).thenReturn(Mono.just(access));
 
         webTestClient.get()
                 .uri(RequestURI)
@@ -253,7 +253,7 @@ class HosterControllerTest {
                 .expectStatus().isOk()
                 .expectBody().json(accessDTOAsJson.toString());
 
-        verify(checkAccessRequestUseCase, times(1)).process(id);
+        verify(checkAccessUseCase, times(1)).process(id);
 
     }
 
@@ -270,7 +270,7 @@ class HosterControllerTest {
                 .reviewedAt(reviewedAt)
                 .build();
 
-        when(checkAccessRequestUseCase.process(id)).thenReturn(Mono.empty());
+        when(checkAccessUseCase.process(id)).thenReturn(Mono.empty());
 
         webTestClient.get()
                 .uri(RequestURI)
@@ -278,7 +278,7 @@ class HosterControllerTest {
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
 
-        verify(checkAccessRequestUseCase, times(1)).process(id);
+        verify(checkAccessUseCase, times(1)).process(id);
 
     }
 
@@ -292,7 +292,7 @@ class HosterControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();;
 
-        verify(checkAccessRequestUseCase, times(0)).process(any());
+        verify(checkAccessUseCase, times(0)).process(any());
 
     }
 

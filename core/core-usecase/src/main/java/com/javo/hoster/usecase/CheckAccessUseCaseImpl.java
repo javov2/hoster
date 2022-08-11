@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public class CheckAccessRequestUseCaseImpl implements CheckAccessRequestUseCase {
+public class CheckAccessUseCaseImpl implements CheckAccessUseCase {
 
     @Autowired
     private AccessRepository accessRepository;

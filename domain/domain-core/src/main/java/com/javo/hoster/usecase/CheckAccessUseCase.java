@@ -5,8 +5,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface RespondAccessRequestUseCase {
+public interface CheckAccessUseCase {
 
-    Mono<Access> process(UUID accessRequestUuid, boolean isGranted);
+    Mono<Access> process(UUID accessRequestId);
 
 }

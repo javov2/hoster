@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CheckAccessRequestUseCaseImplTest {
+class CheckAccessUseCaseImplTest {
 
     @Mock
     private AccessRepository repository;
 
     @InjectMocks
-    private CheckAccessRequestUseCaseImpl underTest;
+    private CheckAccessUseCaseImpl underTest;
 
     public static final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
     public static final String REVIEWED_AT = "2022-08-02T19:45:40";
