@@ -1,12 +1,12 @@
 package com.javo.hoster.repository.entity;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -28,23 +28,26 @@ public class AccessRequestEntity {
     String name;
     @NotNull
     String company;
+    @Email
+    @NotNull
+    String email;
     @NotNull
     LocalDateTime requestedAt;
     @NotNull
-    @Column(name = "granted_until")
-    LocalDateTime accessGrantedUntil;
+    @Column(name = "access_time")
+    Long accessTime;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccessRequestEntity that = (AccessRequestEntity) o;
-        return name.equals(that.name) && company.equals(that.company) && requestedAt.equals(that.requestedAt) && accessGrantedUntil.equals(that.accessGrantedUntil);
+        return name.equals(that.name) && company.equals(that.company) && email.equals(that.email) && requestedAt.equals(that.requestedAt) && accessTime.equals(that.accessTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, company, requestedAt, accessGrantedUntil);
+        return Objects.hash(name, company, email, requestedAt, accessTime);
     }
 }
 

@@ -22,7 +22,7 @@ A pet project by JAVO.
 First, we need a PostgresSQL instance.
 
 ```shell
-docker run -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
+docker run -d --name hoster-db-postgres -e POSTGRES_USER=javo -e POSTGRES_PASSWORD=javo -e POSTGRES_DB=hoster -p 5432:5432 postgres:14-alpine
 ```
 
 Compile and package the project:
@@ -36,3 +36,10 @@ Run the application:
 ```shell
 java -jar .\runner\target\runner-0.0.1-SNAPSHOT.jar
 ```
+
+---
+# What's next
+
+- Learn ProjectReactor - SpringWebFlux
+- Learn Testcontainers
+- Learn Clean Architecture

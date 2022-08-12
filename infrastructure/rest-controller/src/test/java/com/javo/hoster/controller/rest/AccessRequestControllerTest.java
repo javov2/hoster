@@ -35,7 +35,7 @@ class AccessRequestControllerTest {
     public static final String REQUEST_PARAM_ID = "?id=";
 
     public final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
-    public final String GRANTED_UNTIL = "2022-08-03T19:45:40.026626500";
+    private final Long ACCESS_TIME = 10L;
 
     @Autowired
     WebTestClient webTestClient;
@@ -71,7 +71,7 @@ class AccessRequestControllerTest {
                 .name("")
                 .company("")
                 .requestedAt(convertFromString(REQUESTED_AT))
-                .accessGrantedUntil(convertFromString(GRANTED_UNTIL))
+                .accessTime(ACCESS_TIME)
                 .build();
 
         AccessRequest accessRequest2 = AccessRequest.builder()
@@ -79,7 +79,7 @@ class AccessRequestControllerTest {
                 .name("")
                 .company("")
                 .requestedAt(convertFromString(REQUESTED_AT))
-                .accessGrantedUntil(convertFromString(GRANTED_UNTIL))
+                .accessTime(ACCESS_TIME)
                 .build();
 
         JSONObject accessRequestAsJson1 = new JSONObject();
@@ -87,14 +87,14 @@ class AccessRequestControllerTest {
         accessRequestAsJson1.put("name", "");
         accessRequestAsJson1.put("company", "");
         accessRequestAsJson1.put("requestedAt", timeStampTruncatedToSeconds(REQUESTED_AT));
-        accessRequestAsJson1.put("accessGrantedUntil", timeStampTruncatedToSeconds(GRANTED_UNTIL));
+        accessRequestAsJson1.put("accessTime", ACCESS_TIME);
 
         JSONObject accessRequestAsJson2 = new JSONObject();
         accessRequestAsJson2.put("id", uuidAsString2);
         accessRequestAsJson2.put("name", "");
         accessRequestAsJson2.put("company", "");
         accessRequestAsJson2.put("requestedAt", timeStampTruncatedToSeconds(REQUESTED_AT));
-        accessRequestAsJson2.put("accessGrantedUntil", timeStampTruncatedToSeconds(GRANTED_UNTIL));
+        accessRequestAsJson2.put("accessTime", ACCESS_TIME);
 
         JSONArray expectedJsonResponse = new JSONArray();
         expectedJsonResponse.put(accessRequestAsJson1);
@@ -138,7 +138,7 @@ class AccessRequestControllerTest {
                 .name("")
                 .company("")
                 .requestedAt(convertFromString(REQUESTED_AT))
-                .accessGrantedUntil(convertFromString(GRANTED_UNTIL))
+                .accessTime(ACCESS_TIME)
                 .build();
 
         when(findAccessRequestByIdUseCase.process(uuid)).thenReturn(Mono.just(accessRequest));
@@ -148,7 +148,7 @@ class AccessRequestControllerTest {
         accessRequestAsJson.put("name", "");
         accessRequestAsJson.put("company", "");
         accessRequestAsJson.put("requestedAt", timeStampTruncatedToSeconds(REQUESTED_AT));
-        accessRequestAsJson.put("accessGrantedUntil", timeStampTruncatedToSeconds(GRANTED_UNTIL));
+        accessRequestAsJson.put("accessTime",ACCESS_TIME);
 
         webTestClient.get()
                 .uri(ACCESS_REQUEST_PATH+REQUEST_PARAM_ID+uuidAsString)

@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface CheckAccessRequestUseCase {
+public interface CheckAccessUseCase {
 
     Mono<Access> process(UUID accessRequestId);
 

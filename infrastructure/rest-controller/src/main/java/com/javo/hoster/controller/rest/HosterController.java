@@ -1,47 +1,51 @@
 package com.javo.hoster.controller.rest;
 
-import com.javo.hoster.model.Access;
-import com.javo.hoster.model.AccessRequest;
-import com.javo.hoster.model.AccessRequestConfirmation;
-import com.javo.hoster.usecase.CheckAccessRequestUseCase;
-import com.javo.hoster.usecase.ClaimForAccessRequestUseCase;
-import com.javo.hoster.usecase.RespondAccessRequestUseCase;
+import com.javo.hoster.controller.dto.AccessDTO;
+import com.javo.hoster.controller.dto.AccessRequestConfirmationDTO;
+import com.javo.hoster.controller.dto.AccessRequestDTO;
+import com.javo.hoster.controller.rest.adapter.HosterControllerDTOFactory;
+import com.javo.hoster.usecase.CheckAccessUseCase;
+import com.javo.hoster.usecase.ClaimForAccessUseCase;
+import com.javo.hoster.usecase.RespondAccessUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @Controller
 public class HosterController {
 
     @Autowired
-    private CheckAccessRequestUseCase checkAccessRequestUseCase;
+    private CheckAccessUseCase checkAccessUseCase;
     @Autowired
-    private ClaimForAccessRequestUseCase claimForAccessRequestUseCase;
+    private ClaimForAccessUseCase claimForAccessUseCase;
     @Autowired
-    private RespondAccessRequestUseCase respondAccessRequestUseCase;
+    private RespondAccessUseCase respondAccessUseCase;
 
     @ResponseBody
-    @GetMapping(value = "/check-access", params = {"id"})
-    public Mono<Access> checkAccess(@RequestParam(name = "id") String id){
-        return checkAccessRequestUseCase.process(UUID.fromString(id));
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/claim-access")
-    public Mono<AccessRequestConfirmation> checkAccess(AccessRequest accessRequest){
-        return claimForAccessRequestUseCase.process(accessRequest);
+    @PostMapping(value = "/claim-access", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Mono<AccessRequestConfirmationDTO> claimAccess(@Valid @RequestBody AccessRequestDTO accessRequestDTO){
+        var accessRequest = HosterControllerDTOFactory.accessRequestDtoToModel(accessRequestDTO);
+        return claimForAccessUseCase.process(accessRequest)
+                .map(HosterControllerDTOFactory::accessRequestConfirmationToDto);
     }
 
     @ResponseBody
     @PostMapping(value = "/respond-access")
-    public Mono<Access> respondAccess(AccessRequest accessRequest){
-        return respondAccessRequestUseCase.process(accessRequest);
+    public Mono<AccessDTO> respondAccess(@RequestParam(name = "id") UUID id, @RequestParam(name = "isGranted") boolean isGranted){
+        return respondAccessUseCase.process(id, isGranted)
+                .map(HosterControllerDTOFactory::accessToDto);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/check-access", params = {"id"})
+    public Mono<AccessDTO> checkAccess(@RequestParam(name = "id") UUID id){
+        return checkAccessUseCase.process(id)
+                .map(HosterControllerDTOFactory::accessToDto);
     }
 
 }
