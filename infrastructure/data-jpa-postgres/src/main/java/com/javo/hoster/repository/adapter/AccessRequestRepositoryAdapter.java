@@ -19,6 +19,7 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
     @Autowired
     private AccessRequestJPARepository repository;
 
+    @Override
     public Mono<AccessRequest> save(AccessRequest accessRequest){
         return Mono.just(repository.save(toEntity(accessRequest)))
                 .map(this::toModel);
@@ -30,9 +31,16 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
                 .map(this::toModel);
     }
 
+    @Override
     public Flux<AccessRequest> findAll(){
         return Flux.fromIterable(repository.findAll())
                 .map(this::toModel);
+    }
+
+    @Override
+    public Flux<AccessRequest> findAllNotReviewed() {
+        return Flux.fromIterable(repository.findAll())
+                .map(this::toModel);;
     }
 
     private AccessRequest toModel(Optional<AccessRequestEntity> entityOptional){
@@ -48,6 +56,8 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
                 .company(entity.getCompany())
                 .email(entity.getEmail())
                 .name(entity.getName())
+                .isReviewed(entity.isReviewed())
+                .reviewedAt(entity.getReviewedAt())
                 .build();
     }
 
@@ -59,6 +69,8 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
         entity.setEmail(model.getEmail());
         entity.setName(model.getName());
         entity.setAccessTime(model.getAccessTime());
+        entity.setReviewed(model.isReviewed());
+        entity.setReviewedAt(model.getReviewedAt());
         return entity;
     }
 

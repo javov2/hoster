@@ -13,17 +13,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 @NoArgsConstructor
-@Entity
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "access_request")
 public class AccessRequestEntity {
 
     @Id
-    @EqualsAndHashCode.Exclude
     UUID id;
-
     @NotNull
     String name;
     @NotNull
@@ -36,18 +34,29 @@ public class AccessRequestEntity {
     @NotNull
     @Column(name = "access_time")
     Long accessTime;
+    boolean isReviewed;
+    LocalDateTime reviewedAt;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccessRequestEntity that = (AccessRequestEntity) o;
-        return name.equals(that.name) && company.equals(that.company) && email.equals(that.email) && requestedAt.equals(that.requestedAt) && accessTime.equals(that.accessTime);
+        return isReviewed == that.isReviewed
+                && id.equals(that.id)
+                && name.equals(that.name)
+                && company.equals(that.company)
+                && email.equals(that.email)
+                && requestedAt.equals(that.requestedAt)
+                && accessTime.equals(that.accessTime)
+                && Objects.equals(reviewedAt, that.reviewedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, company, email, requestedAt, accessTime);
+        return Objects.hash(id, name, company, email, requestedAt, accessTime, isReviewed, reviewedAt);
     }
 }
+
 

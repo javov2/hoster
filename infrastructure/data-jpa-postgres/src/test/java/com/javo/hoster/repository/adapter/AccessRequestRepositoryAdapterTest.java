@@ -24,7 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AccessRequestRepositoryAdapterTest {
 
-    public static final String UUID_EXAMPLE = "123e4567-e89b-12d3-a456-556642440000";
+    public static final String UUID_EXAMPLE_STRING = "123e4567-e89b-12d3-a456-556642440000";
+    public static final UUID UUID_EXAMPLE = UUID.fromString(UUID_EXAMPLE_STRING);
     private final String REQUESTED_AT = "2022-08-02T19:45:40.026626500";
     private final Long ACCESS_TIME = 10L;
     private final String EMAIL = "test@test.com";
@@ -40,6 +41,7 @@ class AccessRequestRepositoryAdapterTest {
     void saveWhenRepositoryWorksWell() {
 
         var model = AccessRequest.builder()
+                .id(UUID_EXAMPLE)
                 .name("")
                 .company("")
                 .email(EMAIL)
@@ -48,6 +50,7 @@ class AccessRequestRepositoryAdapterTest {
                 .build();
 
         var entityToSave = new AccessRequestEntity();
+        entityToSave.setId(UUID_EXAMPLE);
         entityToSave.setName("");
         entityToSave.setCompany("");
         entityToSave.setEmail(EMAIL);
@@ -67,10 +70,8 @@ class AccessRequestRepositoryAdapterTest {
     @Test
     void findByIdWhenElementExistExpectAccessRequest() {
 
-        var id = UUID.fromString(UUID_EXAMPLE);
-
         var model = AccessRequest.builder()
-                .id(id)
+                .id(UUID_EXAMPLE)
                 .name("")
                 .company("")
                 .email(EMAIL)
@@ -79,38 +80,36 @@ class AccessRequestRepositoryAdapterTest {
                 .build();
 
         var entity = new AccessRequestEntity();
-        entity.setId(id);
+        entity.setId(UUID_EXAMPLE);
         entity.setName("");
         entity.setCompany("");
         entity.setEmail(EMAIL);
         entity.setAccessTime(ACCESS_TIME);
         entity.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
 
-        when(accessRequestJPARepository.findById(id)).thenReturn(Optional.of(entity));
+        when(accessRequestJPARepository.findById(UUID_EXAMPLE)).thenReturn(Optional.of(entity));
 
-        var result = accessRequestRepositoryAdapter.findById(id)
+        var result = accessRequestRepositoryAdapter.findById(UUID_EXAMPLE)
                 .as(StepVerifier::create)
                 .expectNext(model)
                 .verifyComplete();
 
-        verify(accessRequestJPARepository, times(1)).findById(id);
+        verify(accessRequestJPARepository, times(1)).findById(UUID_EXAMPLE);
     }
 
     @Test
     void findByIdWhenElementDoesNotExistExpectNoSuchElementException() {
 
-        var id = UUID.fromString(UUID_EXAMPLE);
+        when(accessRequestJPARepository.findById(UUID_EXAMPLE)).thenReturn(Optional.empty());
 
-        when(accessRequestJPARepository.findById(id)).thenReturn(Optional.empty());
-
-        var result = accessRequestRepositoryAdapter.findById(id)
+        var result = accessRequestRepositoryAdapter.findById(UUID_EXAMPLE)
                 .as(StepVerifier::create)
                 .expectErrorSatisfies(throwable -> {
                     assertEquals(NoSuchElementException.class, throwable.getClass());
                 })
                 .verify();
 
-        verify(accessRequestJPARepository, times(1)).findById(id);
+        verify(accessRequestJPARepository, times(1)).findById(UUID_EXAMPLE);
     }
 
     @Test
