@@ -5,7 +5,9 @@ import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.model.AccessRequestConfirmation;
 import com.javo.hoster.usecase.CheckAccessUseCase;
 import com.javo.hoster.usecase.ClaimForAccessUseCase;
+import com.javo.hoster.usecase.FindAllAccessRequestToReviewUseCase;
 import com.javo.hoster.usecase.RespondAccessUseCase;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -34,6 +37,7 @@ class HosterControllerTest {
     public static final String CHECK_ACCESS_PATH = "/check-access";
     public static final String CLAIM_ACCESS_PATH = "/claim-access";
     public static final String RESPOND_ACCESS_PATH = "/respond-access";
+    public static final String FIND_ACCESS_REQUEST_TO_REVIEW_PATH = "/find-access-request-to-review";
 
     public static final String REQUESTED_AT = "2022-08-02T19:45:40";
     public static final Long ACCESS_TIME = 10L;
@@ -51,6 +55,9 @@ class HosterControllerTest {
 
     @MockBean
     private RespondAccessUseCase respondAccessUseCase;
+
+    @MockBean
+    private FindAllAccessRequestToReviewUseCase findAllAccessRequestToReviewUseCase;
 
     @Test
     void claimAccessWhenAccessRequestDTOIsValidAndAnAccessRequestConfirmationDTOIsReturned() throws JSONException {
@@ -296,4 +303,63 @@ class HosterControllerTest {
 
     }
 
+    @Test
+    void findAllAccessRequestToReviewWhenElementsAreReturned200Expected() throws JSONException {
+        String uuidAsString = "123e4567-e89b-12d3-a456-556642440000";
+        String uuidAsString2 = "000e4567-e89b-12d3-a456-556642440000";
+        UUID uuid = UUID.fromString(uuidAsString);
+        UUID uuid2 = UUID.fromString(uuidAsString2);
+
+        AccessRequest accessRequest1 = AccessRequest.builder()
+                .id(uuid)
+                .name("")
+                .company("")
+                .requestedAt(convertFromString(REQUESTED_AT))
+                .accessTime(ACCESS_TIME)
+                .build();
+
+        AccessRequest accessRequest2 = AccessRequest.builder()
+                .id(uuid2)
+                .name("")
+                .company("")
+                .requestedAt(convertFromString(REQUESTED_AT))
+                .accessTime(ACCESS_TIME)
+                .build();
+
+        JSONObject accessRequestAsJson1 = new JSONObject();
+        accessRequestAsJson1.put("id", uuidAsString);
+        accessRequestAsJson1.put("name", "");
+        accessRequestAsJson1.put("company", "");
+        accessRequestAsJson1.put("requestedAt", timeStampTruncatedToSeconds(REQUESTED_AT));
+        accessRequestAsJson1.put("accessTime", ACCESS_TIME);
+
+        JSONObject accessRequestAsJson2 = new JSONObject();
+        accessRequestAsJson2.put("id", uuidAsString2);
+        accessRequestAsJson2.put("name", "");
+        accessRequestAsJson2.put("company", "");
+        accessRequestAsJson2.put("requestedAt", timeStampTruncatedToSeconds(REQUESTED_AT));
+        accessRequestAsJson2.put("accessTime", ACCESS_TIME);
+
+        JSONArray expectedJsonResponse = new JSONArray();
+        expectedJsonResponse.put(accessRequestAsJson1);
+        expectedJsonResponse.put(accessRequestAsJson2);
+
+        when(findAllAccessRequestToReviewUseCase.process()).thenReturn(Flux.just(accessRequest1, accessRequest2));
+
+        webTestClient.get()
+                .uri(FIND_ACCESS_REQUEST_TO_REVIEW_PATH)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().json(expectedJsonResponse.toString());
+
+        verify(findAllAccessRequestToReviewUseCase, times(1)).process();
+    }
+
+    private LocalDateTime convertFromString(String timestamp){
+        return LocalDateTime.parse(timestamp).truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    private String timeStampTruncatedToSeconds(String timestamp){
+        return LocalDateTime.parse(timestamp).truncatedTo(ChronoUnit.SECONDS).toString();
+    }
 }

@@ -4,13 +4,16 @@ import com.javo.hoster.controller.dto.AccessDTO;
 import com.javo.hoster.controller.dto.AccessRequestConfirmationDTO;
 import com.javo.hoster.controller.dto.AccessRequestDTO;
 import com.javo.hoster.controller.rest.adapter.HosterControllerDTOFactory;
+import com.javo.hoster.model.AccessRequest;
 import com.javo.hoster.usecase.CheckAccessUseCase;
 import com.javo.hoster.usecase.ClaimForAccessUseCase;
+import com.javo.hoster.usecase.FindAllAccessRequestToReviewUseCase;
 import com.javo.hoster.usecase.RespondAccessUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -25,6 +28,8 @@ public class HosterController {
     private ClaimForAccessUseCase claimForAccessUseCase;
     @Autowired
     private RespondAccessUseCase respondAccessUseCase;
+    @Autowired
+    private FindAllAccessRequestToReviewUseCase findAllAccessRequestToReviewUseCase;
 
     @ResponseBody
     @PostMapping(value = "/claim-access", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -46,6 +51,12 @@ public class HosterController {
     public Mono<AccessDTO> checkAccess(@RequestParam(name = "id") UUID id){
         return checkAccessUseCase.process(id)
                 .map(HosterControllerDTOFactory::accessToDto);
+    }
+
+    @ResponseBody
+    @GetMapping("/find-access-request-to-review")
+    public Flux<AccessRequest> getAllAccessRequest(){
+        return findAllAccessRequestToReviewUseCase.process();
     }
 
 }
