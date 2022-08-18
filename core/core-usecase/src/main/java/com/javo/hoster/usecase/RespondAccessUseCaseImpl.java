@@ -22,9 +22,13 @@ public class RespondAccessUseCaseImpl implements RespondAccessUseCase {
     @Override
     public Mono<Access> process(UUID accessRequestUuid, boolean isGranted) {
         return accessRequestRepository.findById(accessRequestUuid)
+                .flatMap(accessRequest -> accessRequestRepository.save(accessRequest.toBuilder()
+                        .isReviewed(Boolean.TRUE)
+                        .reviewedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                        .build()))
                 .flatMap(accessRequest -> accessRepository.save(Access.builder()
                         .id(accessRequest.getId())
-                        .reviewedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                        .reviewedAt(accessRequest.getReviewedAt())
                         .isGranted(isGranted)
                         .build()));
     }

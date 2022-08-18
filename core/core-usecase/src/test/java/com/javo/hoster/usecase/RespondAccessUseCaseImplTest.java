@@ -50,6 +50,13 @@ class RespondAccessUseCaseImplTest {
                 .name("")
                 .accessTime(ACCESS_TIME)
                 .requestedAt(REVIEWED_AT)
+                .isReviewed(Boolean.FALSE)
+                .reviewedAt(null)
+                .build();
+
+        AccessRequest accessRequestReviewed = accessRequestFound.toBuilder()
+                .isReviewed(Boolean.TRUE)
+                .reviewedAt(null)
                 .build();
 
         Access access = Access.builder()
@@ -61,7 +68,11 @@ class RespondAccessUseCaseImplTest {
         when(accessRequestRepository.findById(UUID_EXAMPLE))
                 .thenReturn(Mono.just(accessRequestFound));
 
-        when(accessRepository.save(argThat(accessMatcher(access)))).thenReturn(Mono.just(access));
+        when(accessRequestRepository.save(argThat(accessRequestMatcher(accessRequestReviewed))))
+                .thenReturn(Mono.just(accessRequestReviewed));
+
+        when(accessRepository.save(argThat(accessMatcher(access))))
+                .thenReturn(Mono.just(access));
 
         underTest.process(UUID_EXAMPLE, Boolean.TRUE)
                 .as(StepVerifier::create)
@@ -69,6 +80,7 @@ class RespondAccessUseCaseImplTest {
                 .verifyComplete();
 
         verify(accessRequestRepository, times(1)).findById(UUID_EXAMPLE);
+        verify(accessRequestRepository, times(1)).save(argThat(accessRequestMatcher(accessRequestReviewed)));
         verify(accessRepository, times(1)).save(argThat(accessMatcher(access)));
 
     }
@@ -92,11 +104,17 @@ class RespondAccessUseCaseImplTest {
 
     }
 
+    private ArgumentMatcher<AccessRequest> accessRequestMatcher(AccessRequest toMatch) {
+        return access -> logicalAnd(
+                toMatch.getId().equals(access.getId()),
+                toMatch.isReviewed() == access.isReviewed()
+        );
+    }
+
     private ArgumentMatcher<Access> accessMatcher(Access toMatch) {
         return access -> logicalAnd(
                 toMatch.getId().equals(access.getId()),
                 toMatch.isGranted() == access.isGranted()
         );
     }
-
 }

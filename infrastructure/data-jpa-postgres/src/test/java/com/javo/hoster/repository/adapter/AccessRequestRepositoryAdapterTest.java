@@ -141,4 +141,35 @@ class AccessRequestRepositoryAdapterTest {
         verify(accessRequestJPARepository, times(1)).findAll();
 
     }
+
+    @Test
+    void findAllNotReviewedWhenRepositoryReturnsAList() {
+
+        var model = AccessRequest.builder()
+                .name("")
+                .company("")
+                .email(EMAIL)
+                .accessTime(ACCESS_TIME)
+                .requestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS))
+                .build();
+
+        var entityFound = new AccessRequestEntity();
+        entityFound.setName("");
+        entityFound.setCompany("");
+        entityFound.setEmail(EMAIL);
+        entityFound.setAccessTime(ACCESS_TIME);
+        entityFound.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
+
+        var requestEntityList = List.of(entityFound);
+        when(accessRequestJPARepository.findAllNotReviewed()).thenReturn(requestEntityList);
+
+        var result = accessRequestRepositoryAdapter.findAllNotReviewed()
+                .as(StepVerifier::create)
+                .expectNext(model)
+                .verifyComplete();
+
+        verify(accessRequestJPARepository, times(1)).findAllNotReviewed();
+
+    }
+
 }

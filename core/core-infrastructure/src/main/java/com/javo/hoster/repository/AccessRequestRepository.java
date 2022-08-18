@@ -11,5 +11,6 @@ public interface AccessRequestRepository {
     Mono<AccessRequest> save(AccessRequest accessRequest);
     Mono<AccessRequest> findById(UUID id);
     Flux<AccessRequest> findAll();
+    Flux<AccessRequest> findAllNotReviewed();
 
 }

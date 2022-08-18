@@ -72,6 +72,24 @@ class AccessRequestRepositoryTest {
 
     @Test
     @Order(2)
+    void findAllNotReviewedAccessRequest(){
+
+        var toSave = new AccessRequestEntity();
+        toSave.setId(UUID.fromString("e58b6372-9cdf-4bbd-9412-8053a49146bd"));
+        toSave.setName("");
+        toSave.setCompany("");
+        toSave.setEmail(EMAIL);
+        toSave.setRequestedAt(LocalDateTime.parse(REQUESTED_AT).truncatedTo(ChronoUnit.SECONDS));
+        toSave.setAccessTime(ACCESS_TIME);
+
+        Flux.just(accessRequestJPARepository.findAllNotReviewed())
+                .as(StepVerifier::create)
+                .expectNext(List.of(toSave))
+                .verifyComplete();
+    }
+
+    @Test
+    @Order(2)
     void findAccessRequestById(){
 
         var toSave = new AccessRequestEntity();

@@ -18,5 +18,6 @@ public class AccessRequest {
     private String email;
     private LocalDateTime requestedAt;
     private Long accessTime;
-
+    private boolean isReviewed;
+    private LocalDateTime reviewedAt;
 }

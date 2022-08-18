@@ -39,8 +39,8 @@ public class AccessRequestRepositoryAdapter implements AccessRequestRepository {
 
     @Override
     public Flux<AccessRequest> findAllNotReviewed() {
-        return Flux.fromIterable(repository.findAll())
-                .map(this::toModel);;
+        return Flux.fromIterable(repository.findAllNotReviewed())
+                .map(this::toModel);
     }
 
     private AccessRequest toModel(Optional<AccessRequestEntity> entityOptional){

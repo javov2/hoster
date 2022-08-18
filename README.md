@@ -31,6 +31,10 @@ Compile and package the project:
 mvn -pl runner -am clean install
 ```
 
+```shell
+mvn -pl runner -am clean install -DskipTests
+```
+
 Run the application:
 
 ```shell
