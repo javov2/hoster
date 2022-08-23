@@ -5,6 +5,8 @@ CREATE TABLE access_request (
    email VARCHAR NOT NULL,
    requested_at TIMESTAMP  NOT NULL,
    access_time bigint  NOT NULL,
+   is_reviewed boolean DEFAULT FALSE,
+   reviewed_at TIMESTAMP,
    PRIMARY KEY(id)
 );
 

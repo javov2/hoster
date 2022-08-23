@@ -19,7 +19,3 @@ spring:
         format_sql=true:
     hibernate:
       ddl-auto: create
-  flyway:
-    enabled: true
-    url: ${db}
-    baseline-on-migrate: true
