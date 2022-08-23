@@ -1,19 +1,23 @@
 package com.javo.hoster.repository.adapter;
 
 
+import com.javo.hoster.exception.AccessException;
 import com.javo.hoster.model.Access;
 import com.javo.hoster.repository.AccessJPARepository;
 import com.javo.hoster.repository.AccessRepository;
 import com.javo.hoster.repository.entity.AccessEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@Slf4j
 public class AccessRepositoryAdapter implements AccessRepository {
+
+    public static final String ACCESS_WITH_ID_NOT_FOUND = "Access with id %s not found";
 
     @Autowired
     AccessJPARepository repository;
@@ -27,15 +31,11 @@ public class AccessRepositoryAdapter implements AccessRepository {
     @Override
     public Mono<Access> findById(UUID id) {
         return Mono.just(repository.findById(id))
+                .map(accessEntity -> accessEntity.orElseThrow(() -> new AccessException(String.format(ACCESS_WITH_ID_NOT_FOUND, id))))
                 .map(this::toModel);
     }
 
-    private Access toModel(Optional<AccessEntity> entityOptional){
-        var entity = entityOptional.orElseThrow();
-        return toModel(entity);
-    }
-
-    private Access toModel(AccessEntity entity){
+    private Access toModel(AccessEntity entity) {
         return Access.builder()
                 .id(entity.getId())
                 .reviewedAt(entity.getReviewedAt())
@@ -43,7 +43,7 @@ public class AccessRepositoryAdapter implements AccessRepository {
                 .build();
     }
 
-    private AccessEntity toEntity(Access model){
+    private AccessEntity toEntity(Access model) {
         var entity = new AccessEntity();
         entity.setId(model.getId());
         entity.setIsGranted(model.isGranted());

@@ -1,6 +1,7 @@
 package com.javo.hoster.repository.adapter;
 
 
+import com.javo.hoster.exception.AccessException;
 import com.javo.hoster.model.Access;
 import com.javo.hoster.repository.AccessJPARepository;
 import com.javo.hoster.repository.entity.AccessEntity;
@@ -17,6 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.javo.hoster.repository.adapter.AccessRepositoryAdapter.ACCESS_WITH_ID_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -95,7 +97,8 @@ class AccessRepositoryAdapterTest {
         var result = accessRepositoryAdapter.findById(id)
                 .as(StepVerifier::create)
                 .expectErrorSatisfies(throwable -> {
-                    assertEquals(NoSuchElementException.class, throwable.getClass());
+                    assertEquals(AccessException.class, throwable.getClass());
+                    assertEquals(throwable.getMessage(), String.format(ACCESS_WITH_ID_NOT_FOUND, id));
                 })
                 .verify();
 
